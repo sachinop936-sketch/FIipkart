@@ -1,68 +1,22 @@
-import { Link, useNavigate } from 'react-router-dom';
-import EqualizerIcon from '@mui/icons-material/Equalizer';
-import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
-import InventoryIcon from '@mui/icons-material/Inventory';
-import GroupIcon from '@mui/icons-material/Group';
-import ReviewsIcon from '@mui/icons-material/Reviews';
-import AddBoxIcon from '@mui/icons-material/AddBox';
-import LogoutIcon from '@mui/icons-material/Logout';
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import CloseIcon from '@mui/icons-material/Close';
-import Avatar from '@mui/material/Avatar';
 import { useDispatch, useSelector } from 'react-redux';
-import './Sidebar.css';
+import FolderIcon from '@mui/icons-material/Folder';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import PersonIcon from '@mui/icons-material/Person';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import ChatIcon from '@mui/icons-material/Chat';
+import FolderSharedIcon from '@mui/icons-material/FolderShared';
+import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
-import { logoutUser } from '../../../actions/userAction';
+import { logoutUser } from '../../actions/userAction';
 
-const navMenu = [
-    {
-        icon: <EqualizerIcon />,
-        label: "Dashboard",
-        ref: "/admin/dashboard",
-    },
-    {
-        icon: <ShoppingBagIcon />,
-        label: "Orders",
-        ref: "/admin/orders",
-    },
-    {
-        icon: <InventoryIcon />,
-        label: "Products",
-        ref: "/admin/products",
-    },
-    {
-        icon: <AddBoxIcon />,
-        label: "Add Product",
-        ref: "/admin/new_product",
-    },
-    {
-        icon: <GroupIcon />,
-        label: "Users",
-        ref: "/admin/users",
-    },
-    {
-        icon: <ReviewsIcon />,
-        label: "Reviews",
-        ref: "/admin/reviews",
-    },
-    {
-        icon: <AccountBoxIcon />,
-        label: "My Profile",
-        ref: "/account",
-    },
-    {
-        icon: <LogoutIcon />,
-        label: "Logout",
-    },
-];
-
-const Sidebar = ({ activeTab, setToggleSidebar }) => {
+const Sidebar = ({ activeTab }) => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
 
-    const { user } = useSelector((state) => state.user);
+    const { user } = useSelector(state => state.user);
 
     const handleLogout = () => {
         dispatch(logoutUser());
@@ -71,52 +25,107 @@ const Sidebar = ({ activeTab, setToggleSidebar }) => {
     }
 
     return (
-        <aside className="sidebar z-10 sm:z-0 block min-h-screen fixed left-0 pb-14 max-h-screen w-3/4 sm:w-1/5 bg-gray-800 text-white overflow-x-hidden border-r">
-            <div className="flex items-center gap-3 bg-gray-700 p-2 rounded-lg shadow-lg my-4 mx-3.5">
-                <Avatar
-                    alt="Avatar"
-                    src={user.avatar.url}
-                />
-                <div className="flex flex-col gap-0">
-                    <span className="font-medium text-lg">{user.name}</span>
-                    <span className="text-gray-300 text-sm">{user.email}</span>
+        <div className="hidden sm:flex flex-col gap-4 w-1/4 px-1">
+
+            {/* <!-- profile card --> */}
+            <div className="flex items-center gap-4 p-3 bg-white rounded-sm shadow">
+                {/* <!-- user icon --> */}
+                <div className="w-12 h-12 rounded-full">
+                    <img draggable="false" className="h-full w-full object-cover rounded-full" src={user.avatar.url} alt="Avatar" />
                 </div>
-                <button onClick={()=>setToggleSidebar(false)} className="sm:hidden bg-gray-800 ml-auto rounded-full w-10 h-10 flex items-center justify-center">
-                    <CloseIcon/>
-                </button>
-            </div>
-
-            <div className="flex flex-col w-full gap-0 my-8">
-                {navMenu.map((item, index) => {
-                    const { icon, label, ref } = item;
-                    return (
-                        <>
-                            {label === "Logout" ? (
-                                <button onClick={handleLogout} className="hover:bg-gray-700 flex gap-3 items-center py-3 px-4 font-medium">
-                                    <span>{icon}</span>
-                                    <span>{label}</span>
-                                </button>
-                            ) : (
-                                <Link to={ref} className={`${activeTab === index ? "bg-gray-700" : "hover:bg-gray-700"} flex gap-3 items-center py-3 px-4 font-medium`}>
-                                    <span>{icon}</span>
-                                    <span>{label}</span>
-                                </Link>
-                            )}
-                        </>
-                    )
-                }
-                )}
-            </div>
-
-            <div className="flex flex-col gap-1 bg-gray-700 p-3 rounded-lg shadow-lg mb-6 mt-28 mx-3.5 overflow-hidden">
-                <h5>Developed with ❤️ by:</h5>
-                <div className="flex flex-col gap-0">
-                    <a href="https://www.linkedin.com/in/jigar-sable" target="_blank" rel="noreferrer" className="font-medium text-lg hover:text-blue-500">Jigar Sable</a>
-                    <a href="mailto:jigarsable21@gmail.com" className="text-gray-300 text-sm hover:text-blue-500">jigarsable21@gmail.com</a>
+                {/* <!-- user icon --> */}
+                <div className="flex flex-col gap-1">
+                    <p className="text-xs">Hello,</p>
+                    <h2 className="font-medium">{user.name}</h2>
                 </div>
             </div>
-        </aside>
-    )
+            {/* <!-- profile card --> */}
+
+            {/* <!-- nav tiles --> */}
+            <div className="flex flex-col bg-white rounded-sm shadow">
+
+                {/* <!-- my orders tab --> */}
+                <div className="flex items-center gap-5 px-4 py-4 border-b">
+                    <span className="text-primary-blue"><FolderIcon /></span>
+                    <Link className="flex w-full justify-between font-medium text-gray-500 hover:text-primary-blue" to="/orders">
+                        MY ORDERS
+                        <span><ChevronRightIcon /></span>
+                    </Link>
+                </div>
+                {/* <!-- my orders tab --> */}
+
+                {/* <!-- account settings tab --> */}
+                <div className="flex items-center gap-5 px-4 py-4">
+                    <span className="text-primary-blue"><PersonIcon /></span>
+                    <p className="flex w-full justify-between font-medium text-gray-500">ACCOUNT SETTINGS</p>
+                </div>
+                <div className="flex flex-col pb-3 border-b text-sm">
+                    <Link to="/account" className={`${activeTab === "profile" ? "bg-blue-50 text-primary-blue font-medium" : "hover:bg-blue-50 hover:text-primary-blue"} p-3 pl-14`}>Profile Information</Link>
+                    <Link className="p-3 pl-14 hover:bg-blue-50 hover:text-primary-blue" to="/">Manage Addresses</Link>
+                    <Link className="p-3 pl-14 hover:bg-blue-50 hover:text-primary-blue" to="/">PAN Card Information</Link>
+                </div>
+                {/* <!-- account settings tab --> */}
+
+                {/* <!-- payments tab --> */}
+                <div className="flex items-center gap-5 px-4 py-4">
+                    <span className="text-primary-blue"><AccountBalanceWalletIcon /></span>
+                    <p className="flex w-full justify-between font-medium text-gray-500">PAYMENTS</p>
+                </div>
+                <div className="flex flex-col pb-3 border-b text-sm">
+                    <Link className="p-3 pl-14 hover:bg-blue-50 hover:text-primary-blue flex justify-between pr-6" to="/">Gift Cards <span className="font-medium text-primary-green">₹0</span></Link>
+                    <Link className="p-3 pl-14 hover:bg-blue-50 hover:text-primary-blue" to="/">Saved UPI</Link>
+                    <Link className="p-3 pl-14 hover:bg-blue-50 hover:text-primary-blue" to="/">Saved Cards</Link>
+                </div>
+                {/* <!-- payments tab --> */}
+
+                {/* <!-- my chats tab --> */}
+                <div className="flex items-center gap-5 px-4 py-4 border-b">
+                    <span className="text-primary-blue"><ChatIcon /></span>
+                    <Link className="flex w-full justify-between font-medium text-gray-500 hover:text-primary-blue" to="/">
+                        MY CHATS
+                        <span><ChevronRightIcon /></span>
+                    </Link>
+                </div>
+                {/* <!-- my chats tab --> */}
+
+                {/* <!-- my stuff tab --> */}
+                <div className="flex items-center gap-5 px-4 py-4">
+                    <span className="text-primary-blue"><FolderSharedIcon /></span>
+                    <p className="flex w-full justify-between font-medium text-gray-500">MY STUFF</p>
+                </div>
+                <div className="flex flex-col pb-3 border-b text-sm">
+                    <Link className="p-3 pl-14 hover:bg-blue-50 hover:text-primary-blue" to="/">My Coupons</Link>
+                    <Link className="p-3 pl-14 hover:bg-blue-50 hover:text-primary-blue" to="/">My Reviews & Ratings</Link>
+                    <Link className="p-3 pl-14 hover:bg-blue-50 hover:text-primary-blue" to="/">All Notifications</Link>
+                    <Link to="/wishlist" className={`${activeTab === "wishlist" ? "bg-blue-50 text-primary-blue font-medium" : "hover:bg-blue-50 hover:text-primary-blue"} p-3 pl-14`}>My Wishlist</Link>
+                </div>
+                {/* <!-- my stuff tab --> */}
+
+                {/* <!-- logout tab --> */}
+                <div className="flex items-center gap-5 px-4 py-4 border-b">
+                    <span className="text-primary-blue"><PowerSettingsNewIcon /></span>
+                    <div className="flex w-full justify-between font-medium text-gray-500 hover:text-primary-blue cursor-pointer" onClick={handleLogout}>
+                        Logout
+                        <span><ChevronRightIcon /></span>
+                    </div>
+                </div>
+                {/* <!-- logout tab --> */}
+
+            </div>
+            {/* <!-- nav tiles --> */}
+
+            {/* <!-- frequenty visited tab --> */}
+            <div className="flex flex-col items-start gap-2 p-4 bg-white rounded-sm shadow">
+                <span className="text-xs font-medium">Frequently Visited:</span>
+                <div className="flex gap-2.5 text-xs text-gray-500">
+                    <Link to="/password/update">Change Password</Link>
+                    <Link to="/orders">Track Order</Link>
+                    <Link to="/">Help Center</Link>
+                </div>
+            </div>
+            {/* <!-- frequenty visited tab --> */}
+        </div>
+    );
 };
 
 export default Sidebar;
